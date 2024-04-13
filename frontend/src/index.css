@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add your custom styles here */
+.msg-scroll + div {
+  max-width: 200px !important;
+  display: flex;
+  flex-direction: column;
+}
