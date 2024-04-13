@@ -12,6 +12,14 @@ const io = new socketio.Server(server, {
 data = [];
 
 io.on("connection", (socket) => {
+  socket.on("disconnect", () => {
+    data = data.filter(user => user !== socket.id);
+    // delete connectedSocketIds[socket.id];
+    // connectedSocketIds={}
+    // io.emit('change names', connectedSocketIds);
+    console.log('a user disconnected', socket.id);
+    console.log(data);
+  });
   socket.on("initialconnection", (initialdata) => {
     data = [...data, initialdata];
     console.log(data);
@@ -20,4 +28,6 @@ io.on("connection", (socket) => {
     io.emit("chat", { message: payload.message });
   });
 });
-server.listen(8080);
+server.listen(8080, () => {
+  console.log("Server is running on port 8080");
+});
