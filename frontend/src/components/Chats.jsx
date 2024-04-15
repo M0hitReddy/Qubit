@@ -16,6 +16,7 @@ import { useState } from "react";
 import { dummyData } from "../DummyData";
 import Chat from "./Chat";
 import SideMenu from "./SideMenu";
+import { ChatShadcn } from "./ChatShadcn";
 export default function Chats() {
     const [selectedChat, setSelectedChat] = useState();
     const [search, setSearch] = useState('');
@@ -37,12 +38,12 @@ export default function Chats() {
                 <SideMenu />
                 <Card className='rounded-none flex flex-col  border-black border-y-0 bg-gray-100 shadow-none border-r-1 w-[200px] sm:w-1/3 h-screen'>
                     <div className="p-2 z-10 w-full bg-gray-100">
-                        <div className="relative m-2 shadow-xl ">
+                        <div className="relative m-2 rounded-lg shadow-xl ">
                             <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
                                 placeholder="Search products..."
-                                className="pl-8"
+                                className="pl-8 bg-zinc-200 border-b-slate-400 focus:border-b-zinc-700 focus-visible:bg-white focus-visible:ring-0 focus-visible:ring-offset-0 border-b-4"
                                 value={search}
                                 onChange={handleSearchChange}
                             />
@@ -70,7 +71,10 @@ export default function Chats() {
                         </CardContent>
                     </ScrollArea>
                 </Card >
-                {selectedChat && <Chat contact={dummyData.filter((data) => data.id === selectedChat)[0]} />}
+                {selectedChat && 
+                // <ChatShadcn contact={dummyData.filter((data) => data.id === selectedChat)[0]} />
+                <Chat contact={dummyData.filter((data) => data.id === selectedChat)[0]} />
+                }
             </main>
         </>
     )

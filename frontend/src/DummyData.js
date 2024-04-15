@@ -39,78 +39,78 @@ const dummyData = [
         avatarFallback: 'SD',
         amount: '+$39.00'
     },
-    {
-        id: 6,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    },
-    {
-        id: 7,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    },
-    {
-        id: 8,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    },
-    {
-        id: 9,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    },
-    {
-        id: 10,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    },
-    {
-        id: 11,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    },
-    {
-        id: 12,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    },
-    {
-        id: 13,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    },
-    {
-        id: 14,
-        name: 'William Kim',
-        email: 'will@email.com',
-        image: '/avatars/04.png',
-        avatarFallback: 'WK',
-        amount: '+$99.00'
-    }
+    // {
+    //     id: 6,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // },
+    // {
+    //     id: 7,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // },
+    // {
+    //     id: 8,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // },
+    // {
+    //     id: 9,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // },
+    // {
+    //     id: 10,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // },
+    // {
+    //     id: 11,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // },
+    // {
+    //     id: 12,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // },
+    // {
+    //     id: 13,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // },
+    // {
+    //     id: 14,
+    //     name: 'William Kim',
+    //     email: 'will@email.com',
+    //     image: '/avatars/04.png',
+    //     avatarFallback: 'WK',
+    //     amount: '+$99.00'
+    // }
 ];
 
 const dummyMessages = [
