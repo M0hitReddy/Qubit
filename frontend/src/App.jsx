@@ -1,6 +1,9 @@
-import { BrowserRouter as Router, Route, useNavigate, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, useNavigate, Routes, Link } from 'react-router-dom';
 // import Redirect from 'react-router-dom';
 import { ThemeProvider } from "@/components/theme-provider"
+import { buttonVariants } from "@/components/ui/button"
+
+import axios from 'axios';
 import { useState, useMemo, useEffect } from 'react';
 // import DialogMine from './components/DialogMine.jsx';
 // import Input from "./components/InputMine.jsx";
@@ -8,82 +11,189 @@ import { io } from 'socket.io-client';
 import Chats from "./components/Chats.jsx";
 import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
+import { ShowerHead } from 'lucide-react';
+import Loading from './components/Loading.jsx';
 // import SideMenu from "./components/SideMenu.jsx";
 function App() {
-  const socket = useMemo(() => io('http://localhost:8080'), []);
-  useEffect(() => {
-    socket.on('connect', () => { console.log('connected', socket.id); });
-  }, [socket]);
-  // const username = 'mmm';
-  // const password = 'mmm';
-  // const [valid, setValid] = useState(false);
+  // const socket = useMemo(() => io('http://localhost:8080'), []);
   // useEffect(() => {
-  const isUserAuthenticated = async () => {
-    // Check if JWT token exists in cookies
-    const cookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('token='));
+  //   socket.on('connect', () => { console.log('connected', socket.id); });
+  // }, [socket]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState();
+  const [details, setDetails] = useState({});
 
-    if (!cookie) {
-      return false;
+
+  useEffect(() => {
+    const fun = async () => {
+      const loggedInStatus = await isUserLoggedIn();
+      console.log(loggedInStatus);
+      setIsLoggedIn(loggedInStatus);
+      // setIsLoading(!isLoggedIn);
     }
+    fun()
+  }, []);
 
-    // Extract the actual token value from the cookie string
-    const token = cookie.split('=')[1].trim();
-    // Send token to server for verification
+  const fetchData = async (token) => {
     try {
-      const response = await axios.post('/api/verifyToken', { token: token });
-      return response.data.isAuthenticated;
+      const response = await axios.post('http://localhost:8080/details', { token: token });
+      console.log(response);
+      setDetails(response.data);
+      return true;
     } catch (error) {
       console.error('Error verifying token:', error);
+      setIsLoggedIn(false);
+      console.log('Token not found');
       return false;
     }
+  };
+  const isUserLoggedIn = async () => {
+    // Check if JWT token exists in local storage
+    const token = localStorage.getItem('token');
+    console.log(token);
+    if (!token) {
+      console.log('No token found');
+      return false;
+    }
+    // Check if token is valid
+    const isValid = await fetchData(token);
+    if (isValid) {
+      console.log('Token found');
+      return true;
+    };
+    return false;
   }
-  // }, [])
-  // const navigate = useNavigate();
+
+  const handleSignup = async (formData, setError, setShowError) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/user/signup', formData);
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        setIsLoggedIn(true);
+        setIsLoading(!isLoggedIn);
+        fetchData(response.data.token);
+        // setDetails(response.data);
+      } else {
+        console.error('No token received');
+      }
+    } catch (error) {
+      console.log(error.response.data.message);
+      setError(error.response.data.message);
+      setShowError(false);
+      setTimeout(() => {
+        setShowError(true);
+      }, 100);
+      console.error('Error logging in:', error);
+    }
+  }
+
+  const handleLogin = async (username, password, setError, setShowError) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post('http://localhost:8080/api/user/login', { username, password });
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        setIsLoggedIn(true);
+        setIsLoading(!isLoggedIn);
+        setError('');
+        fetchData(response.data.token);
+        // setDetails(response.data);
+      } else {
+        console.error('No token received');
+      }
+    } catch (error) {
+      setError(error.response.data.message);
+      setShowError(false);
+      setTimeout(() => {
+        setShowError(true);
+      }, 100);
+      console.error('Error logging in:', error);
+    }
+    finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    // console.log('logged out');
+    setIsLoading(true);
+    setIsLoggedIn(false);
+  };
+
+  //  return <Loading />;
 
   return (
     <>
       <Router>
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <Routes>
-            <Route path="/signup" Component={Signup} />
+            {/* <Route path="/signup" Component={Signup} />
             <Route path="/login" Component={Login} />
-            {/* <Route path="/" Component={Chats} /> */}
-            {/* <PrivateRoute path="/" component={Chats} /> */}
-            <Route path="/" element={<ProtectedRoute isUserAuthenticated={isUserAuthenticated} socket={socket} />} />
-
-            {
-              // valid ? <Chats socket={socket} /> : <Login setValid={setValid} username={username} password={password} />
-            }
-            {/* <Chats socket={socket} /> */}
-            {/* <DialogMine />
-        <Input /> */}
+            <Route path="/" element={<ProtectedRoute isUserLoggedIn={isUserLoggedIn} socket={socket} />} /> */}
+            <Route path="/login" element={<LoginRoute isLoggedIn={isLoggedIn} isLoading={isLoading} onLogin={handleLogin} />} />
+            <Route path="/signup" element={<SignupRoute isLoggedIn={isLoggedIn} isLoading={isLoading} onSignup={handleSignup} />} />
+            <Route path="/" element={<HomeRoute isLoggedIn={isLoggedIn} isLoading={isLoading} details={details} onLogout={handleLogout} />} />
           </Routes >
         </ThemeProvider>
       </Router>
     </>
   )
 }
-function ProtectedRoute({ isUserAuthenticated, socket }) {
+
+const LoginRoute = ({ isLoggedIn, isLoading, onLogin }) => {
   const navigate = useNavigate();
-  const isAuthenticated = isUserAuthenticated(); // Adjust this as per your requirements
-
-  if (!isAuthenticated) {
-    navigate('/login');
-    return null;
+  useEffect(() => {
+    if (isLoggedIn && !isLoading) {
+      console.log('logged in');
+      navigate("/");
+    }
+  }, [isLoggedIn, isLoading, navigate]);
+  if (isLoading) {
+    return <Loading />;
   }
+  return isLoggedIn ? null : <Login onLogin={onLogin} />;
+};
 
-  return <Chats socket={socket} />;
-}
-// const PrivateRoute = ({ component: Component, ...rest }) => {
-//   const navigate = useNavigate();
-//   return (
+const SignupRoute = ({ isLoggedIn, isLoading, onSignup }) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isLoggedIn && !isLoading) {
+      navigate("/");
+    }
+  }, [isLoggedIn, isLoading, navigate]);
+  if (isLoading) {
+    return <Loading />;
+  }
+  return isLoggedIn ? null : <Signup onSignup={onSignup} />;
+};
 
-//     <Route {...rest} render={(props) => (
+const HomeRoute = ({ isLoggedIn, isLoading, details, onLogout }) => {
+  const navigate = useNavigate();
+  // const [isLoading, setIsLoading] = useState(!isLoggedIn);
 
-//       // isUserAuthenticated() ? <Component {...props} /> : <Redirect to="/login" />
-//       isUserAuthenticated() ? <Component {...props} /> : navigate('/login')
-//     )} />
-//   )
-// };
+  useEffect(() => {
+    console.log(isLoggedIn, "home route");
+    if (!isLoggedIn && isLoading) {
+      console.log('not logged in');
+      navigate("/login");
+    }
+
+
+  }, [isLoggedIn, isLoading, navigate]);
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
+  return (
+    isLoggedIn ? <Chats details={details} onLogout={onLogout} /> : (navigate('/login'))
+  )
+  // <div className='flex gap-4 m-10 items-center text-xl'>
+  {/* <p className='text-gray-500'>you must be logged in to view this content</p> */ }
+  // <Loading />
+  {/* <Link to={'/login'} className={buttonVariants({ variant: 'link' })}>login</Link> */ }
+  // </div>;
+};
+
+
 
 export default App;

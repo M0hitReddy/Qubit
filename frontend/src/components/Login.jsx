@@ -11,33 +11,71 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function Login(props) {
+export default function Login({ onLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const [showError, setShowError] = useState(false);
+    
+    const fetchData = async (token) => {
+        try {
+            // const token = localStorage.getItem('token');
+            const response = await axios.post('http://localhost:8080/details', { token: token });
+            console.log(response);
+            return true;
+            // setDetails(response.data);
+        } catch (error) {
+            // console.error('Error verifying token:', error);
+            // setIsAuthenticated(false);
+            // handleLogout();
+            // isAuthenticated(false);
+            // setIsLoggedIn(false);
+            console.log('Token not found');
+            return false;
+        }
+        // finally {
+        // setIsLoading(false);
+        // }
+    };
+    // useEffect(() => {
+
+    // if (isAuthenticated) {
+    // }
+    // }, []);
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            console.log(username)
-            const response = await axios.post('http://localhost:8080/login', { username, password });
-            console.log(response); // Login successful
-            navigate('/');
-            // Redirect or show success message
-        } catch (error) {
-            console.error(error);
-            setError('Invalid username or password');
-        }
+        // try {
+        //     console.log(username)
+        //     const response = await axios.post('http://localhost:8080/api/user/login', { username, password });
+        //     console.log(response.data.token); // Login successful
+        //     localStorage.setItem('token', response.data.token);
+        //     navigate('/');
+        //     // Redirect or show success message
+        // } catch (error) {
+        //     console.error(error);
+        //     setError('Invalid username or password');
+        // }
+        onLogin(username, password, setError, setShowError);
     };
     return (
         <Card className="mx-auto max-w-sm mt-[10%]">
             <CardHeader>
                 <CardTitle className="text-2xl">Login</CardTitle>
-                <CardDescription>
-                    Enter your email below to login to your account
-                </CardDescription>
+                {/* <CardDescription>
+                    {error === '' ? 'Enter your email below to login to your account' : <div className="text-red-500">{error}</div>}
+                </CardDescription> */}
+                {/* {error === '' ? <CardDescription>Enter your email below to login to your account</CardDescription> : <CardDescription className={`transition-opacity duration-500 ease-in-out ${showError ? 'opacity-100' : 'opacity-0'} text-red-500`}>
+                    {error}
+                </CardDescription>} */}
+                {error === '' ? (
+                    <CardDescription>Enter your email below to login to your account</CardDescription>
+                ) : (
+                    <CardDescription className={`transition-opacity duration-100 ease-in-out ${showError ? 'animate-jiggle opacity-100' : 'opacity-0'} text-red-500`}>
+                        {error}
+                    </CardDescription>
+                )}
             </CardHeader>
             <CardContent>
                 <div className="grid gap-4">

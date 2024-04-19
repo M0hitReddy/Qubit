@@ -17,7 +17,7 @@ import { dummyData } from "../DummyData";
 import Chat from "./Chat";
 import SideMenu from "./SideMenu";
 import { ChatShadcn } from "./ChatShadcn";
-export default function Chats() {
+export default function Chats({details,onLogout}) {
     const [selectedChat, setSelectedChat] = useState();
     const [search, setSearch] = useState('');
     const [chats, setChats] = useState(dummyData);
@@ -35,7 +35,7 @@ export default function Chats() {
     return (
         <>
             <main className="flex">
-                <SideMenu />
+                <SideMenu details={details} onLogout={onLogout}/>
                 <Card className='rounded-none flex flex-col  border-black border-y-0 bg-gray-100 shadow-none border-r-1 w-[200px] sm:w-1/3 h-screen'>
                     <div className="p-2 z-10 w-full bg-gray-100">
                         <div className="relative m-2 rounded-lg shadow-xl ">
